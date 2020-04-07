@@ -1,0 +1,20 @@
+acl:
+  token: 245d0a00-7139-bbea-aadc-ff170a0562b1
+
+spring:
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        # 启用服务发现
+        enabled: true
+        # 启用服务注册
+        register: true
+        hostname: 127.0.0.1
+        acl-token: ${acl.token}
+        serviceName: ${spring.application.name}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 15s
+        tags: url-prefix-/${spring.application.name}
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}

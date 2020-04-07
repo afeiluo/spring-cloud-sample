@@ -1,0 +1,37 @@
+server:
+  port: 8081
+
+acl:
+  token: 245d0a00-7139-bbea-aadc-ff170a0562b1
+
+spring:
+  application:
+    name: consul-provider
+  profiles:
+    active: dev
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        # 启用服务发现
+        enabled: true
+        # 启用服务注册
+        register: true
+        hostname: 127.0.0.1
+        acl-token: ${acl.token}
+        serviceName: ${spring.application.name}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 15s
+        tags: url-prefix-/${spring.application.name}
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+      config:
+        enabled: true
+        format: YAML
+        data-key: data
+        acl-token: ${acl.token}
+        # watch选项为配置监视功能，主要监视配置的改变
+        watch:
+          enabled: true
+          delay: 10000
+          wait-time: 30
